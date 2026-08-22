@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import tiktoken
 import sys
-from attention import MultiHeadAttention
+from components.attention import MultiHeadAttention
 
 sys.path.append("..")
 tokenizer = tiktoken.get_encoding("gpt2")
