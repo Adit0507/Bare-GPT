@@ -53,10 +53,6 @@ class FeedForward(nn.Module):
 
     def forward(self, x):
         return self.layers(x)
-ffn = FeedForward(GPT_CONFIG_124M)
-x =torch.rand(2, 3,768)
-out =ffn(x)
-print(out.shape)
 
 class TransformerBlock(nn.Module):
     def __init__(self, cfg):
@@ -81,12 +77,6 @@ class TransformerBlock(nn.Module):
         x = self.drop_shortcut(x)
         x = x + shortcut    #addin original input back
         return x
-torch.manual_seed(123)
-x = torch.rand(2, 4, 768)
-block = TransformerBlock(GPT_CONFIG_124M)
-output = block(x)
-print("Input shape:", x.shape)
-print("Output shape:", output.shape)
 
 class GPTModel(nn.Module):
     def __init__(self, cfg):
@@ -109,13 +99,6 @@ class GPTModel(nn.Module):
         logits = self.out_head(x)
         return logits
 
-torch.manual_seed(123)
-model =GPTModel(GPT_CONFIG_124M)
-out= model(batch)
-print("Input batch:\n", batch)
-print("\nOutput shape:", out.shape)
-print(out)
-
 # generating text
 def generate_text_simple(model, idx, max_new_tokens, context_size):
     for _ in range(max_new_tokens):
@@ -127,18 +110,3 @@ def generate_text_simple(model, idx, max_new_tokens, context_size):
         idx_next = torch.argmax(probas, dim=-1, keepdim=True)
         idx = torch.cat((idx, idx_next), dim=1)
     return idx
-
-start_context = "Hello, I am"
-encoded = tokenizer.encode(start_context)
-print("encoded: ", encoded)
-encoded_tensor = torch.tensor(encoded).unsqueeze(0)
-print("encoded_tensor.shape:", encoded_tensor.shape)
-
-model.eval()
-out =generate_text_simple(model=model, idx=encoded_tensor, max_new_tokens=6, context_size=GPT_CONFIG_124M["context_length"])
-print("Output: ", out)
-print("Output length: ", len(out[0]))
-
-# convertin ids back to text
-decoded_text = tokenizer.decode(out.squeeze(0).tolist())
-print(decoded_text) #untrained output, its great!!!

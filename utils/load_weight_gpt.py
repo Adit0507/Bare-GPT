@@ -53,6 +53,22 @@ def load_weights_ingpt(gpt, params):
         gpt.trf_blocks[b].norm1.shift = assign(gpt.trf_blocks[b].norm1.shift,params["blocks"][b]["ln_1"]["b"])
         gpt.trf_blocks[b].norm2.scale = assign(gpt.trf_blocks[b].norm2.scale, params["blocks"][b]["ln_2"]["g"])
         gpt.trf_blocks[b].norm2.shift = assign(gpt.trf_blocks[b].norm2.shift, params["blocks"][b]["ln_2"]["b"])
-gpt.final_norm.scale = assign(gpt.final_norm.scale, params["g"])
-gpt.final_norm.shift = assign(gpt.final_norm.shift, params["b"])
-gpt.out_head.weight = assign(gpt.out_head.weight, params["wte"])
+
+    gpt.final_norm.scale = assign(
+            gpt.final_norm.scale,
+            params["g"]
+        )
+
+    gpt.final_norm.shift = assign(
+        gpt.final_norm.shift,
+        params["b"]
+    )
+
+    print("ABOUT TO LOAD OUTPUT HEAD")
+
+    gpt.out_head.weight = assign(
+        gpt.out_head.weight,
+        params["wte"]
+    )
+
+print("OUTPUT HEAD LOADED")
